@@ -29,6 +29,7 @@
     float shapeAlpha;
     NSString *selectedBlendMode;
     NSString *selectedShapeType;
+    int counter;
 }
 
 - (void)viewDidLoad {
@@ -36,10 +37,11 @@
     
     selectedFillColor = [UIColor clearColor];
     selectedStrokeColor = [UIColor blackColor];
-    selectedStrokeWidth = 1;
+    selectedStrokeWidth = 10;
     selectedBlendMode = @"Normal";
     selectedShapeType = @"Scribble";
     shapeAlpha = 1;
+    counter = 0;
 
 }
 
@@ -60,6 +62,13 @@
     selectedStrokeWidth = sender.value;
     
 }
+
+- (IBAction)changeAlpha:(UISlider *)sender {
+    
+    shapeAlpha = sender.value;
+    
+}
+
 
 - (void)choice:(NSString *)choice forGroup:(NSString *)group {
     
@@ -116,9 +125,29 @@
     
 }
 
-- (IBAction)showHideDrawer:(id)sender {
+//- (void) drawerPress:(UIButton*)button {
+//
+//    button.transform = CGAffineTransformMakeRotation(3.14);
+//
+//}
+
+- (IBAction)showHideDrawer:(UIButton *)sender {
     
     self.drawerLeftConstraint.constant = (self.drawerLeftConstraint.constant == -16) ? -266 : -16;
+    
+//    [sender addTarget:self action:@selector(drawerPress:) forControlEvents:UIControlEventTouchUpInside];
+    
+//    [UIView beginAnimations:@"ScaleButton" context:NULL];
+//    [UIView setAnimationDuration: 0.5f];
+//    sender.transform = CGAffineTransformMakeRotation(3.14);
+//    [UIView commitAnimations];
+    
+    if (counter % 2 == 0) {
+        sender.transform = CGAffineTransformMakeRotation( ( 180 * M_PI ) / 180 );
+    } else {
+        sender.transform = CGAffineTransformMakeRotation(0);
+    }
+    counter++;
     
 }
 

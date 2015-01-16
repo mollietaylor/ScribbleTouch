@@ -10,28 +10,6 @@
 
 @implementation ScribbleView
 
-//    @[
-//
-//        @{
-//            @"type":@"path",
-//            @"fillColor":[UIColor greenColor],
-//            @"strokeColor":[UIColor blackColor],
-//            @"strokeWidth":@2,
-//            @"points":@[CGPoint,CGPoint,CGPoint]
-//        },
-//
-//        @{
-//            @"type":@"circle",
-//            @"fillColor":[UIColor greenColor],
-//            @"strokeColor":[UIColor blackColor],
-//            @"strokeWidth":@2,
-//            @"frame":CGRect
-//        }
-//
-//    ];
-
-
-
 - (NSMutableArray *)scribbles {
     
     if (_scribbles == nil) { _scribbles = [@[] mutableCopy]; }
@@ -39,13 +17,14 @@
     
 }
 
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     
     // Drawing code
     
     CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetLineJoin(context, kCGLineJoinRound);
+    CGContextSetLineCap(context, kCGLineCapRound);
     
     for (NSDictionary * scribble in self.scribbles) {
         
@@ -53,8 +32,8 @@
         
         CGContextSetLineWidth(context, [scribble[@"strokeWidth"] floatValue]);
         
-        UIColor * strokeColor = scribble[@"strokeColor"];
-        [strokeColor set];
+        UIColor *fillColor = scribble[@"fillColor"];
+        [fillColor set];
         
         // stroke path
         
@@ -86,11 +65,74 @@
             
             CGRect rect = CGRectMake(firstPoint.x, firstPoint.y, width, height);
             
-            // CGContextMoveToPoint and CGContextAddLineToPoint
+            // fill
+            //            CGContextSetBlendMode(context, kCGBlendModeMultiply);
+            CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
+            CGContextFillRect(context, rect);
             
+            // stroke?
+            UIColor * strokeColor = scribble[@"strokeColor"];
+            [strokeColor set];
             CGContextAddRect(context, rect);
             
             
+            
+        }
+        
+        if ([scribble[@"type"] isEqualToString:@"Triangle"]) {
+
+            // fill
+            UIColor *fillColor = scribble[@"fillColor"];
+            [fillColor set];
+            
+            CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
+            CGPoint secondPoint = [scribble[@"points"][1] CGPointValue];
+            
+            CGFloat width = secondPoint.x - firstPoint.x;
+            
+            CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
+            
+            CGContextMoveToPoint(context, firstPoint.x + width / 2, firstPoint.y);
+            CGContextAddLineToPoint(context, secondPoint.x, secondPoint.y);
+            CGContextAddLineToPoint(context, firstPoint.x, secondPoint.y);
+            CGContextClosePath(context);
+            CGContextFillPath(context);
+            
+            // stroke
+            UIColor * strokeColor = scribble[@"strokeColor"];
+            [strokeColor set];
+            
+            CGContextMoveToPoint(context, firstPoint.x + width / 2, firstPoint.y);
+            CGContextAddLineToPoint(context, secondPoint.x, secondPoint.y);
+            CGContextAddLineToPoint(context, firstPoint.x, secondPoint.y);
+            CGContextClosePath(context);
+            CGContextStrokePath(context);
+            
+        }
+        
+        if ([scribble[@"type"] isEqualToString:@"Ellipse"]) {
+            
+            UIColor *fillColor = scribble[@"fillColor"];
+            [fillColor set];
+            
+            CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
+            
+            CGPoint secondPoint = [scribble[@"points"][1] CGPointValue];
+            
+            CGFloat width = secondPoint.x - firstPoint.x;
+            CGFloat height = secondPoint.y - firstPoint.y;
+            
+            CGRect rect = CGRectMake(firstPoint.x, firstPoint.y, width, height);
+            
+            CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
+            CGContextFillEllipseInRect(context, rect);
+            
+            CGContextFillPath(context);
+            
+            // stroke
+            UIColor * strokeColor = scribble[@"strokeColor"];
+            [strokeColor set];
+            CGContextStrokeEllipseInRect(context, rect);
             
         }
         
