@@ -23,26 +23,55 @@
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineJoin(context, kCGLineJoinRound);
-    CGContextSetLineCap(context, kCGLineCapRound);
-    
     for (NSDictionary * scribble in self.scribbles) {
         
-        // stroke color & width
+        NSArray *points = scribble[@"points"];
         
-        CGContextSetLineWidth(context, [scribble[@"strokeWidth"] floatValue]);
+        if (points.count < 2) continue;
         
-        UIColor *fillColor = scribble[@"fillColor"];
-        [fillColor set];
+        [self addToContext:context withScribble:scribble andType:@"Fill"];
+        [self addToContext:context withScribble:scribble andType:@"Stroke"];
         
-        // stroke path
-        
-        BOOL typeIsScribble = [scribble[@"type"] isEqualToString:@"Scribble"];
-        BOOL typeIsLine = [scribble[@"type"] isEqualToString:@"Line"];
-        
-        if (typeIsScribble || typeIsLine) {
+    }
+    
+}
+
+- (void)addToContext:(CGContextRef)context withScribble:(NSDictionary *)scribble andType:(NSString *)type {
+    
+    NSArray *points = scribble[@"points"];
+    
+    NSArray *shapeTypes = @[
+                                @"Scribble",
+                                @"Line",
+                                @"Ellipse",
+                                @"Triangle",
+                                @"Rectangle"
+                                ];
+    
+    NSArray *blendModes = @[
+                             @"Normal",
+                             @"Screen",
+                             @"Multiply",
+                             @"Overlay",
+                             @"Clear"
+                             ];
+    
+    CGContextSetLineJoin(context, kCGLineJoinRound);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineWidth(context, [scribble[@"strokeWidth"] floatValue]);
+    
+    CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
+    CGPoint secondPoint = [scribble[@"points"][1] CGPointValue];
+    
+    CGFloat width = secondPoint.x - firstPoint.x;
+    CGFloat height = secondPoint.y - firstPoint.y;
+    
+    CGRect rect = CGRectMake(firstPoint.x, firstPoint.y, width, height);
+    
+    switch ([shapeTypes indexOfObject:scribble[@"type"]]) {
+        case 0 : // Scribble
+        case 1 : // Line
             
-            CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
             CGContextMoveToPoint(context, firstPoint.x, firstPoint.y);
             
             for (NSValue * pointValue in scribble[@"points"]) {
@@ -52,90 +81,84 @@
                 
             }
             
-        }
+            break;
         
-        if ([scribble[@"type"] isEqualToString:@"Rectangle"]) {
+        case 2 : // Ellipse
             
-            CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
+            if (points.count > 1) {
+                
+                CGContextAddEllipseInRect(context, rect);
+            }
             
-            CGPoint secondPoint = [scribble[@"points"][1] CGPointValue];
+            break;
             
-            CGFloat width = secondPoint.x - firstPoint.x;
-            CGFloat height = secondPoint.y - firstPoint.y;
+        case 3 : // Triangle
             
-            CGRect rect = CGRectMake(firstPoint.x, firstPoint.y, width, height);
+            if (points.count > 1) {
+                
+                CGContextMoveToPoint(context, firstPoint.x + width / 2, firstPoint.y);
+                CGContextAddLineToPoint(context, secondPoint.x, secondPoint.y);
+                CGContextAddLineToPoint(context, firstPoint.x, secondPoint.y);
+                CGContextClosePath(context);
+                
+            }
             
-            // fill
-            //            CGContextSetBlendMode(context, kCGBlendModeMultiply);
-            CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
-            CGContextFillRect(context, rect);
+            break;
             
-            // stroke?
-            UIColor * strokeColor = scribble[@"strokeColor"];
-            [strokeColor set];
-            CGContextAddRect(context, rect);
+        case 4 : // Rectangle
             
+            if (points.count > 1) {
+                
+                CGContextAddRect(context, rect);
+                
+            }
             
+            break;
             
-        }
-        
-        if ([scribble[@"type"] isEqualToString:@"Triangle"]) {
+        default:
+            break;
+    }
 
-            // fill
-            UIColor *fillColor = scribble[@"fillColor"];
-            [fillColor set];
+    
+    if([type isEqualToString:@"Fill"]) {
+        
+        UIColor *fillColor = scribble[@"fillColor"];
+        [fillColor set];
+        CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
+        
+        
+# warning Not sure if blend mode is working
+        switch ([blendModes indexOfObject:scribble[@"blend"]]) {
+            case 0 : // Normal
+                CGContextSetBlendMode(context, kCGBlendModeNormal);
+                break;
+                
+            case 1 : // Screen
+                CGContextSetBlendMode(context, kCGBlendModeScreen);
+                break;
             
-            CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
-            CGPoint secondPoint = [scribble[@"points"][1] CGPointValue];
-            
-            CGFloat width = secondPoint.x - firstPoint.x;
-            
-            CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
-            
-            CGContextMoveToPoint(context, firstPoint.x + width / 2, firstPoint.y);
-            CGContextAddLineToPoint(context, secondPoint.x, secondPoint.y);
-            CGContextAddLineToPoint(context, firstPoint.x, secondPoint.y);
-            CGContextClosePath(context);
-            CGContextFillPath(context);
-            
-            // stroke
-            UIColor * strokeColor = scribble[@"strokeColor"];
-            [strokeColor set];
-            
-            CGContextMoveToPoint(context, firstPoint.x + width / 2, firstPoint.y);
-            CGContextAddLineToPoint(context, secondPoint.x, secondPoint.y);
-            CGContextAddLineToPoint(context, firstPoint.x, secondPoint.y);
-            CGContextClosePath(context);
-            CGContextStrokePath(context);
-            
+            case 2 : // Multiply
+                CGContextSetBlendMode(context, kCGBlendModeMultiply);
+                break;
+                
+            case 3 : // Overlay
+                CGContextSetBlendMode(context, kCGBlendModeOverlay);
+                break;
+                
+            case 4 : // Clear
+                CGContextSetBlendMode(context, kCGBlendModeClear);
+                break;
+                
+            default:
+                break;
         }
         
-        if ([scribble[@"type"] isEqualToString:@"Ellipse"]) {
-            
-            UIColor *fillColor = scribble[@"fillColor"];
-            [fillColor set];
-            
-            CGPoint firstPoint = [scribble[@"points"][0] CGPointValue];
-            
-            CGPoint secondPoint = [scribble[@"points"][1] CGPointValue];
-            
-            CGFloat width = secondPoint.x - firstPoint.x;
-            CGFloat height = secondPoint.y - firstPoint.y;
-            
-            CGRect rect = CGRectMake(firstPoint.x, firstPoint.y, width, height);
-            
-            CGContextSetAlpha(context, [scribble[@"alpha"] floatValue]);
-            CGContextFillEllipseInRect(context, rect);
-            
-            CGContextFillPath(context);
-            
-            // stroke
-            UIColor * strokeColor = scribble[@"strokeColor"];
-            [strokeColor set];
-            CGContextStrokeEllipseInRect(context, rect);
-            
-        }
+        CGContextFillPath(context);
         
+    } else {
+        
+        UIColor * strokeColor = scribble[@"strokeColor"];
+        [strokeColor set];
         CGContextStrokePath(context);
         
     }

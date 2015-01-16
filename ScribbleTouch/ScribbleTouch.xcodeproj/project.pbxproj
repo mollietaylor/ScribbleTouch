@@ -16,6 +16,9 @@
 		A9F572DE1A66C7BB007B1EEA /* ScribbleTouchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F572DD1A66C7BB007B1EEA /* ScribbleTouchTests.m */; };
 		A9F572E91A66C81E007B1EEA /* ScribbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F572E81A66C81E007B1EEA /* ScribbleView.m */; };
 		ECEBAD761A68194500DCCC69 /* ChoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEBAD751A68194500DCCC69 /* ChoiceViewController.m */; };
+		ECF144B21A69689700F0336D /* RoundButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF144B11A69689700F0336D /* RoundButton.m */; };
+		ECF144B51A6995C000F0336D /* RoundLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF144B41A6995C000F0336D /* RoundLabel.m */; };
+		ECF144B81A6998C500F0336D /* GoldButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF144B71A6998C500F0336D /* GoldButtons.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +49,12 @@
 		A9F572E81A66C81E007B1EEA /* ScribbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScribbleView.m; sourceTree = "<group>"; };
 		ECEBAD741A68194500DCCC69 /* ChoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoiceViewController.h; sourceTree = "<group>"; };
 		ECEBAD751A68194500DCCC69 /* ChoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoiceViewController.m; sourceTree = "<group>"; };
+		ECF144B01A69689700F0336D /* RoundButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundButton.h; sourceTree = "<group>"; };
+		ECF144B11A69689700F0336D /* RoundButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundButton.m; sourceTree = "<group>"; };
+		ECF144B31A6995C000F0336D /* RoundLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundLabel.h; sourceTree = "<group>"; };
+		ECF144B41A6995C000F0336D /* RoundLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundLabel.m; sourceTree = "<group>"; };
+		ECF144B61A6998C500F0336D /* GoldButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoldButtons.h; sourceTree = "<group>"; };
+		ECF144B71A6998C500F0336D /* GoldButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoldButtons.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +96,7 @@
 		A9F572C01A66C7BB007B1EEA /* ScribbleTouch */ = {
 			isa = PBXGroup;
 			children = (
+				ECF144B91A6998D300F0336D /* UI Elements */,
 				A9F572E71A66C81E007B1EEA /* ScribbleView.h */,
 				A9F572E81A66C81E007B1EEA /* ScribbleView.m */,
 				A9F572C81A66C7BB007B1EEA /* ViewController.h */,
@@ -127,6 +137,19 @@
 				A9F572DC1A66C7BB007B1EEA /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		ECF144B91A6998D300F0336D /* UI Elements */ = {
+			isa = PBXGroup;
+			children = (
+				ECF144B31A6995C000F0336D /* RoundLabel.h */,
+				ECF144B41A6995C000F0336D /* RoundLabel.m */,
+				ECF144B01A69689700F0336D /* RoundButton.h */,
+				ECF144B11A69689700F0336D /* RoundButton.m */,
+				ECF144B61A6998C500F0336D /* GoldButtons.h */,
+				ECF144B71A6998C500F0336D /* GoldButtons.m */,
+			);
+			name = "UI Elements";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,9 +253,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9F572CA1A66C7BB007B1EEA /* ViewController.m in Sources */,
+				ECF144B51A6995C000F0336D /* RoundLabel.m in Sources */,
 				A9F572C71A66C7BB007B1EEA /* AppDelegate.m in Sources */,
 				A9F572E91A66C81E007B1EEA /* ScribbleView.m in Sources */,
 				ECEBAD761A68194500DCCC69 /* ChoiceViewController.m in Sources */,
+				ECF144B81A6998C500F0336D /* GoldButtons.m in Sources */,
+				ECF144B21A69689700F0336D /* RoundButton.m in Sources */,
 				A9F572C41A66C7BB007B1EEA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

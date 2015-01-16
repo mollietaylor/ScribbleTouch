@@ -9,12 +9,18 @@
 #import "ViewController.h"
 #import "ScribbleView.h"
 #import "ChoiceViewController.h"
+#import "RoundLabel.h"
 
 @interface ViewController () <ChoiceViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *blendModeButton;
 @property (weak, nonatomic) IBOutlet UIButton *shapeTypeButton;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
+@property (weak, nonatomic) IBOutlet UIImageView *selectedShapeImage;
+@property (weak, nonatomic) IBOutlet RoundLabel *alpha1;
+@property (weak, nonatomic) IBOutlet RoundLabel *alpha2;
+@property (weak, nonatomic) IBOutlet RoundLabel *blend1;
+@property (weak, nonatomic) IBOutlet RoundLabel *blend2;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerLeftConstraint;
 
@@ -66,6 +72,8 @@
 - (IBAction)changeAlpha:(UISlider *)sender {
     
     shapeAlpha = sender.value;
+    self.alpha1.alpha = sender.value;
+    self.alpha2.alpha = sender.value;
     
 }
 
@@ -83,6 +91,22 @@
         
         selectedShapeType = choice;
         [self.shapeTypeButton setTitle:choice forState:UIControlStateNormal];
+        
+        // change icon
+        
+        if ([selectedShapeType isEqualToString:@"Scribble"]) {
+            self.selectedShapeImage.image = [UIImage imageNamed: @"shape_scribble"];
+        } else if ([selectedShapeType isEqualToString:@"Line"]) {
+            self.selectedShapeImage.image = [UIImage imageNamed: @"shape_line"];
+        } else if ([selectedShapeType isEqualToString:@"Ellipse"]) {
+            self.selectedShapeImage.image = [UIImage imageNamed: @"shape_ellipse"];
+        } else if ([selectedShapeType isEqualToString:@"Triangle"]) {
+            self.selectedShapeImage.image = [UIImage imageNamed: @"shape_triangle"];
+        } else if ([selectedShapeType isEqualToString:@"Rectangle"]) {
+            self.selectedShapeImage.image = [UIImage imageNamed: @"shape_rectangle"];
+        }
+        
+        [self.view setNeedsDisplay];
         
     }
     
@@ -104,9 +128,11 @@
     
     [self presentViewController:choiceVC animated:NO completion:nil];
     
+#warning This is where the blend mode of the icon should be set
+    
 }
 
-- (IBAction)changeShapeType:(id)sender {
+- (IBAction)changeShapeType:(UIButton *)sender {
     
     ChoiceViewController *choiceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"choiceVC"];
     
@@ -122,25 +148,11 @@
     
     [self presentViewController:choiceVC animated:NO completion:nil];
     
-    
 }
-
-//- (void) drawerPress:(UIButton*)button {
-//
-//    button.transform = CGAffineTransformMakeRotation(3.14);
-//
-//}
 
 - (IBAction)showHideDrawer:(UIButton *)sender {
     
     self.drawerLeftConstraint.constant = (self.drawerLeftConstraint.constant == -16) ? -266 : -16;
-    
-//    [sender addTarget:self action:@selector(drawerPress:) forControlEvents:UIControlEventTouchUpInside];
-    
-//    [UIView beginAnimations:@"ScaleButton" context:NULL];
-//    [UIView setAnimationDuration: 0.5f];
-//    sender.transform = CGAffineTransformMakeRotation(3.14);
-//    [UIView commitAnimations];
     
     if (counter % 2 == 0) {
         sender.transform = CGAffineTransformMakeRotation( ( 180 * M_PI ) / 180 );
@@ -190,5 +202,22 @@
     
     [self.view setNeedsDisplay];
 }
+
+- (IBAction)reset:(id)sender {
+    
+    ScribbleView *sView = (ScribbleView *) self.view;
+    [sView.scribbles removeAllObjects];
+    [sView setNeedsDisplay];
+    
+}
+
+- (IBAction)undo:(id)sender {
+    
+    ScribbleView *sView = (ScribbleView *) self.view;
+    [sView.scribbles removeLastObject];
+    [sView setNeedsDisplay];
+    
+}
+
 
 @end
