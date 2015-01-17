@@ -16,11 +16,17 @@
 @property (weak, nonatomic) IBOutlet UIButton *blendModeButton;
 @property (weak, nonatomic) IBOutlet UIButton *shapeTypeButton;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
-@property (weak, nonatomic) IBOutlet UIImageView *selectedShapeImage;
+
+
+// drawer icons
+@property (weak, nonatomic) IBOutlet UIImageView *strokeColorIcon;
+@property (weak, nonatomic) IBOutlet RoundLabel *fillColorIcon;
+@property (weak, nonatomic) IBOutlet RoundLabel *strokeWidthIcon;
 @property (weak, nonatomic) IBOutlet RoundLabel *alpha1;
 @property (weak, nonatomic) IBOutlet RoundLabel *alpha2;
 @property (weak, nonatomic) IBOutlet RoundLabel *blend1;
 @property (weak, nonatomic) IBOutlet RoundLabel *blend2;
+@property (weak, nonatomic) IBOutlet UIImageView *selectedShapeImage;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerLeftConstraint;
 
@@ -41,7 +47,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    selectedFillColor = [UIColor clearColor];
+    selectedFillColor = [UIColor colorWithRed:0.95 green:0.35 blue:0.12 alpha:1];
     selectedStrokeColor = [UIColor blackColor];
     selectedStrokeWidth = 10;
     selectedBlendMode = @"Normal";
@@ -55,11 +61,22 @@
     
     selectedStrokeColor = sender.backgroundColor;
     
+    self.strokeColorIcon.image = [sender backgroundImageForState:UIControlStateNormal];    
+    
 }
 
 - (IBAction)changeFillColor:(UIButton *)sender {
     
     selectedFillColor = sender.backgroundColor;
+    
+    // drawer icons
+    self.fillColorIcon.backgroundColor = sender.backgroundColor;
+#warning Might need to change this one:
+    self.strokeWidthIcon.backgroundColor = sender.backgroundColor;
+    self.alpha1.backgroundColor = sender.backgroundColor;
+    self.alpha2.backgroundColor = sender.backgroundColor;
+    self.blend1.backgroundColor = sender.backgroundColor;
+    self.blend2.backgroundColor = sender.backgroundColor;
     
 }
 
@@ -72,6 +89,8 @@
 - (IBAction)changeAlpha:(UISlider *)sender {
     
     shapeAlpha = sender.value;
+    
+    // change alpha of icon
     self.alpha1.alpha = sender.value;
     self.alpha2.alpha = sender.value;
     

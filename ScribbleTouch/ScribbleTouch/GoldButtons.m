@@ -11,7 +11,7 @@
 @implementation GoldButtons
 
 - (void)drawRect:(CGRect)rect {
-    [self.layer setBorderWidth:2.0f];
+    [self.layer setBorderWidth:1.0f];
     [self.layer setBorderColor:[UIColor colorWithRed:161.0/255.0 green:153.0/255.0 blue:81.0/255.0 alpha:1.0].CGColor];
 }
 
